@@ -1,3 +1,6 @@
+# Copyright 2026 Neural Inverse
+# SPDX-License-Identifier: Apache-2.0
+
 # Publishes @sandscale/sdk to npm when a v* tag is pushed. npm trusted publishing (OIDC):
 # no npm token is stored anywhere; the registry trusts this repository and this workflow file
 # (release.yml). Provenance is attached automatically. See RELEASING.md for the one-time setup.
