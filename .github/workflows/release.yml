@@ -1,0 +1,40 @@
+# Publishes @sandscale/sdk to npm when a v* tag is pushed. npm trusted publishing (OIDC):
+# no npm token is stored anywhere; the registry trusts this repository and this workflow file
+# (release.yml). Provenance is attached automatically. See RELEASING.md for the one-time setup.
+name: release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # npm trusted publishing and provenance
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24 # ships npm 11, which trusted publishing needs (>= 11.5.1)
+          registry-url: https://registry.npmjs.org
+      - name: Tag matches package.json
+        run: |
+          want="${GITHUB_REF_NAME#v}"
+          have="$(node -p "require('./package.json').version")"
+          test "$want" = "$have" || { echo "tag $GITHUB_REF_NAME but package.json is $have"; exit 1; }
+          grep -q "VERSION = \"$want\"" src/version.ts || { echo "src/version.ts does not carry $want"; exit 1; }
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - name: Publish
+        run: |
+          case "$GITHUB_REF_NAME" in
+            *-*) npm publish --provenance --access public --tag next ;;
+            *)   npm publish --provenance --access public ;;
+          esac

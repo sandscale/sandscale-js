@@ -1,0 +1,53 @@
+{
+  "name": "@sandscale/sdk",
+  "version": "1.0.0",
+  "description": "Sandscale TypeScript SDK: sandboxes, workspaces and build hosts over the Sandscale API",
+  "license": "Apache-2.0",
+  "author": "Neural Inverse",
+  "keywords": ["sandscale", "sandbox", "ai", "agents", "code-execution"],
+  "homepage": "https://github.com/sandscale/sandscale-js#readme",
+  "bugs": {
+    "url": "https://github.com/sandscale/sandscale-js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sandscale/sandscale-js.git"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^4.1.12"
+  },
+  "overrides": {
+    "esbuild": "0.28.2"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true,
+    "registry": "https://registry.npmjs.org/"
+  }
+}
